@@ -11,3 +11,6 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-primary: #1677ff;
 }
+html{
+  direction: rtl;
+}
