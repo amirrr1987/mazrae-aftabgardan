@@ -11,10 +11,10 @@ const orderStore = useOrderStore()
 const { byId } = useProductLookup()
 const router = useRouter()
 
-// اگر سبد خالی بود برگرد
-if (!cartStore.cart.length) {
-  await navigateTo('/')
-}
+// اگر سبد خالی بود برگرد — فقط در client بررسی می‌شود تا از hydration race condition جلوگیری شود
+onMounted(() => {
+  if (!cartStore.cart.length) navigateTo('/')
+})
 
 const schema = z.object({
   firstName: z.string().min(2, 'نام باید حداقل ۲ کاراکتر باشد'),
@@ -86,7 +86,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       totalPrice: grandTotal.value,
     })
 
-    cartStore.cart.splice(0)
+    cartStore.clearCart()
     router.push(`/order/${order.id}`)
   } finally {
     loading.value = false
@@ -153,7 +153,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               </div>
             </template>
             <UFormField name="note">
-              <UInput v-model="state.note" placeholder="هر توضیحی برای فروشنده..." class="w-full" />
+              <UTextarea v-model="state.note" placeholder="هر توضیحی برای فروشنده..." :rows="3" class="w-full" />
             </UFormField>
           </UCard>
 

@@ -1,31 +1,45 @@
 import type { ICart } from "~/models/cart.model"
-import type { IProduct } from "~/models/product.model"
+
+type CartProductId = ICart['productId']
 
 export const useCartStore = defineStore('cart', () => {
   const cart = ref<ICart[]>([])
-  const addToCart = (productId: Omit<ICart, 'createAt' | 'updateAt' | 'id'>['productId']) => {
-    // finf Product by id in Card 
-    const product = cart.value.find(p => p.productId === productId)
-    if (product) {
-      product.quantity += 1
+
+  const totalItems = computed(() => cart.value.reduce((acc, i) => acc + i.quantity, 0))
+
+  function addToCart(productId: CartProductId) {
+    const item = cart.value.find((p) => p.productId === productId)
+    if (item) {
+      item.quantity += 1
     } else {
       cart.value.push({ productId, quantity: 1 })
     }
   }
 
-  const removeFromCart = (productId: Omit<ICart, 'createAt' | 'updateAt' | 'id'>['productId']) => {
-    const product = cart.value.find(p => p.productId === productId)
-    if (product) {
-      product.quantity -= 1
+  function decrementFromCart(productId: CartProductId) {
+    const item = cart.value.find((p) => p.productId === productId)
+    if (!item) return
+    if (item.quantity > 1) {
+      item.quantity -= 1
+    } else {
+      cart.value = cart.value.filter((p) => p.productId !== productId)
     }
-    if (product && product.quantity === 0) {
-      cart.value = cart.value.filter(p => p.productId !== productId)
-    }
+  }
+
+  function removeAllFromCart(productId: CartProductId) {
+    cart.value = cart.value.filter((p) => p.productId !== productId)
+  }
+
+  function clearCart() {
+    cart.value = []
   }
 
   return {
     cart,
+    totalItems,
     addToCart,
-    removeFromCart
+    decrementFromCart,
+    removeAllFromCart,
+    clearCart,
   }
 })

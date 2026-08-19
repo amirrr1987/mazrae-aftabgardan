@@ -51,8 +51,9 @@ const filteredProducts = computed(() => {
     })
 })
 
-function setCategory(id: number | null) {
+function setCategory(id: number | null, closeMobile = false) {
   selectedCategoryId.value = id === selectedCategoryId.value ? null : id
+  if (closeMobile) mobileFilterOpen.value = false
 }
 
 function clearFilters() {
@@ -163,7 +164,7 @@ function clearFilters() {
             size="xs"
             :variant="selectedCategoryId === null ? 'solid' : 'outline'"
             color="neutral"
-            @click="setCategory(null)"
+            @click="setCategory(null, true)"
           >
             همه
           </UButton>
@@ -174,7 +175,7 @@ function clearFilters() {
             :icon="cat.icon"
             :variant="selectedCategoryId === cat.id ? 'solid' : 'outline'"
             color="neutral"
-            @click="setCategory(cat.id)"
+            @click="setCategory(cat.id, true)"
           >
             {{ cat.label }}
           </UButton>

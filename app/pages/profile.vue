@@ -81,7 +81,7 @@ async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
 
 function logout() {
   authStore.logout()
-  cartStore.cart.splice(0)
+  cartStore.clearCart()
   navigateTo('/')
 }
 

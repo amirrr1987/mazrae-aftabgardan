@@ -37,7 +37,7 @@
           :enter="{ opacity: 1, scale: 1, transition: { duration: 500, delay: 300 } }"
           class="flex flex-wrap gap-3 justify-center"
         >
-          <UButton size="xl" icon="i-lucide-arrow-down" trailing>
+          <UButton size="xl" icon="i-lucide-arrow-down" trailing @click="scrollToProducts">
             مشاهده محصولات
           </UButton>
         </div>
@@ -49,7 +49,7 @@
     </section>
 
     <!-- Products -->
-    <section class="max-w-7xl mx-auto px-4 py-12">
+    <section ref="productsSection" class="max-w-7xl mx-auto px-4 py-12">
       <div
         v-motion
         :initial="{ opacity: 0, x: 20 }"
@@ -61,7 +61,17 @@
         </div>
         <h2 class="text-2xl font-bold text-default">محصولات ما</h2>
       </div>
-      <ProductGrid :products="productStore.products" />
+      <!-- Skeleton -->
+      <div v-if="productStore.loading" class="flex gap-8 items-start">
+        <div class="hidden lg:block w-60 shrink-0 space-y-3">
+          <div class="h-4 bg-muted rounded-lg w-1/2 animate-pulse" />
+          <div v-for="i in 5" :key="i" class="h-9 bg-muted rounded-xl animate-pulse" />
+        </div>
+        <div class="flex-1 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <ProductCardSkeleton v-for="i in 6" :key="i" />
+        </div>
+      </div>
+      <ProductGrid v-else :products="productStore.products" />
     </section>
   </div>
 </template>
@@ -71,4 +81,11 @@ import { useProductStore } from '~/stores/product.store'
 
 useHead({ title: 'مزرعه آفتابگردان — قهوه، شکلات و تنقلات' })
 const productStore = useProductStore()
+await productStore.fetchProducts()
+
+const productsSection = useTemplateRef<HTMLElement>('productsSection')
+
+function scrollToProducts() {
+  productsSection.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 </script>

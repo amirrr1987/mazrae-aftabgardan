@@ -15,7 +15,15 @@ const cartItem = computed(() =>
 )
 
 watchEffect(() => {
-  useHead({ title: product.value?.name ?? 'محصول پیدا نشد' })
+  useHead({ title: product.value ? `${product.value.name} — مزرعه آفتابگردان` : 'محصول پیدا نشد' })
+  if (product.value) {
+    useSeoMeta({
+      description: product.value.description,
+      ogDescription: product.value.description,
+      ogImage: product.value.logo,
+      ogTitle: product.value.name,
+    })
+  }
 })
 
 function formatPrice(price: number) {
@@ -78,7 +86,7 @@ const categoryColor = (id: number): 'primary' | 'secondary' | 'success' | 'warni
             variant="outline"
             icon="i-lucide-minus"
             square
-            @click="cartStore.removeFromCart(product.id)"
+            @click="cartStore.decrementFromCart(product.id)"
           />
           <span class="text-xl font-bold w-8 text-center">{{ cartItem.quantity }}</span>
           <UButton
@@ -99,6 +107,17 @@ const categoryColor = (id: number): 'primary' | 'secondary' | 'success' | 'warni
           افزودن به سبد خرید
         </UButton>
       </div>
+    </div>
+
+    <!-- نظرات -->
+    <div class="mt-12">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <UIcon name="i-lucide-message-square" class="size-5 text-primary" />
+        </div>
+        <h2 class="text-xl font-bold text-default">نظرات کاربران</h2>
+      </div>
+      <ProductReviews :product-id="product.id" />
     </div>
   </div>
   <ProductNotFound v-else />

@@ -10,6 +10,8 @@ const emit = defineEmits<{
   addToCart: [productId: IProduct['id']]
 }>()
 
+const wishlistStore = useWishlistStore()
+
 const categoryLabel = (id: number) =>
   ({ 1: 'قهوه', 2: 'شکلات', 3: 'آبنبات', 4: 'پاستیل' } as Record<number, string>)[id] ?? `دسته ${id}`
 
@@ -38,6 +40,19 @@ function discountPercent(price: number, discount: number) {
           {{ discountPercent(product.price, product.discountPrice) }}٪−
         </span>
       </div>
+
+      <!-- Wishlist -->
+      <button
+        class="absolute top-3 inset-e-3 size-8 rounded-full bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm flex items-center justify-center shadow-sm transition-transform hover:scale-110 cursor-pointer"
+        :aria-label="wishlistStore.has(product.id) ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'"
+        @click.prevent="wishlistStore.toggle(product.id)"
+      >
+        <UIcon
+          :name="wishlistStore.has(product.id) ? 'i-lucide-heart' : 'i-lucide-heart'"
+          class="size-4 transition-colors"
+          :class="wishlistStore.has(product.id) ? 'text-red-500' : 'text-muted'"
+        />
+      </button>
 
       <!-- Category -->
       <div class="absolute bottom-3 inset-e-3">

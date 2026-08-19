@@ -41,9 +41,9 @@ function formatPrice(price: number) {
             :quantity="item.quantity"
             :price="byId(item.productId)?.price"
             :discount-price="byId(item.productId)?.discountPrice"
-            @remove="cartStore.removeFromCart"
+            @remove="cartStore.removeAllFromCart"
             @increment="cartStore.addToCart"
-            @decrement="cartStore.removeFromCart"
+            @decrement="cartStore.decrementFromCart"
           />
         </div>
 

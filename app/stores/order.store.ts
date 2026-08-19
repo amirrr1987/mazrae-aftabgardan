@@ -1,4 +1,4 @@
-import type { IOrder, IOrderItem, OrderStatus } from '~/models/order.model'
+import type { IOrder, OrderStatus } from '~/models/order.model'
 
 export const useOrderStore = defineStore('order', () => {
   const orders = ref<IOrder[]>([])
