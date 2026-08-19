@@ -14,4 +14,6 @@ export interface IProduct extends IBase {
   brandId: IBrand['id']
 
   isActive: boolean
+  price: number
+  discountPrice?: number
 }

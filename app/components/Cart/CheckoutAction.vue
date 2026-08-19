@@ -1,29 +1,18 @@
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    label?: string
-  }>(),
-  {
-    label: 'پرداخت و تکمیل سفارش',
-  },
-)
+const toast = useToast()
 
-const emit = defineEmits<{
-  checkout: []
-}>()
+function onCheckout() {
+  toast.add({
+    title: 'به‌زودی فعال می‌شود',
+    description: 'امکان پرداخت آنلاین در حال توسعه است.',
+    color: 'info',
+    icon: 'i-lucide-info',
+  })
+}
 </script>
 
 <template>
-  <UCard>
-    <UButton
-      color="primary"
-      block
-      aria-label="پرداخت و تکمیل سفارش"
-      @click="emit('checkout')"
-      class="cursor-pointer"
-    >
-      <span>{{ label }}</span>
-      <UIcon name="i-lucide-shopping-cart" />
-    </UButton>
-  </UCard>
+  <UButton color="primary" block icon="i-lucide-credit-card" @click="onCheckout">
+    تکمیل سفارش
+  </UButton>
 </template>

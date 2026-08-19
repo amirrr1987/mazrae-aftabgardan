@@ -1,0 +1,40 @@
+---
+description: Always use default Nuxt UI components; never customize; style only with inline Tailwind classes
+alwaysApply: true
+---
+
+# Default Components Only
+
+Always use stock Nuxt UI (`U*`) and Vue/Nuxt built-ins as they ship. Never customize components. Layout and spacing must use inline Tailwind classes on `class`.
+
+## Do
+
+- Use default components: `UButton`, `UInput`, `UCard`, `UModal`, `UForm`, `UTable`, `UApp`, etc.
+- Pass only documented props (`color`, `variant`, `size`, `label`, …).
+- Put layout/spacing on the `class` attribute (Tailwind utilities).
+
+```vue
+<UButton color="primary" size="md" class="mt-4 w-full">ذخیره</UButton>
+<div class="flex flex-col gap-4 p-6">
+  <UCard class="w-full">
+    <UInput v-model="name" class="w-full" />
+  </UCard>
+</div>
+```
+
+## Do not
+
+- Do not wrap a default component just to restyle it.
+- Do not use the `ui` / `:ui` prop, `class` slot overrides, or theme slot maps to restyle internals.
+- Do not add `<style>` / `<style scoped>` for component look.
+- Do not write custom CSS classes, `@apply`, or extra CSS files for UI.
+- Do not fork or copy a `U*` component into `app/components` to change its markup or styles.
+
+```vue
+<!-- ❌ BAD -->
+<UButton :ui="{ base: 'rounded-none bg-[#123]' }" />
+<UButton class="my-special-btn" />
+<style scoped>
+.my-special-btn { background: #123; }
+</style>
+```
