@@ -9,7 +9,7 @@
   /* در Tailwind v4 مقدار پیش‌فرض html از --font-sans گرفته می‌شود (preflight) */
   --font-sans: "IranSans", "Vazirmatn", "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --color-primary: #1677ff;
+  --color-primary: #d97706;
 }
 html{
   direction: rtl;

@@ -11,67 +11,77 @@ const emit = defineEmits<{
 }>()
 
 const categoryLabel = (id: number) =>
-  ({ 1: 'قهوه و نوشیدنی', 2: 'شکلات', 3: 'آبنبات', 4: 'پاستیل' } as Record<number, string>)[id] ?? `دسته ${id}`
-
-const categoryColor = (id: number): 'primary' | 'secondary' | 'success' | 'warning' =>
-  ({ 1: 'primary', 2: 'secondary', 3: 'success', 4: 'warning' } as Record<number, 'primary' | 'secondary' | 'success' | 'warning'>)[id] ?? 'primary'
+  ({ 1: 'قهوه', 2: 'شکلات', 3: 'آبنبات', 4: 'پاستیل' } as Record<number, string>)[id] ?? `دسته ${id}`
 
 function formatPrice(price: number) {
-  return price.toLocaleString('fa-IR') + ' تومان'
+  return price.toLocaleString('fa-IR')
+}
+
+function discountPercent(price: number, discount: number) {
+  return Math.round((1 - discount / price) * 100)
 }
 </script>
 
 <template>
-  <UCard class="overflow-hidden group">
-    <template #header>
-      <div class="relative overflow-hidden">
-        <ProductThumb
-          :src="product.logo"
-          :alt="product.name"
-          img-class="w-full h-52 object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div class="absolute top-2 inset-e-2 flex flex-col gap-1">
-          <UBadge :color="categoryColor(product.categoryId)" variant="solid" size="sm">
-            {{ categoryLabel(product.categoryId) }}
-          </UBadge>
-          <UBadge v-if="product.discountPrice" color="error" variant="solid" size="sm">
-            تخفیف
-          </UBadge>
-        </div>
-        <div v-if="cartQuantity" class="absolute top-2 inset-s-2">
-          <UBadge color="primary" variant="solid" size="sm">
-            {{ cartQuantity }} در سبد
-          </UBadge>
-        </div>
-      </div>
-    </template>
+  <div class="group relative flex flex-col rounded-2xl bg-elevated border border-default overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
+    <!-- Image -->
+    <NuxtLink :to="`/${product.slug}`" class="relative block overflow-hidden aspect-4/3">
+      <ProductThumb
+        :src="product.logo"
+        :alt="product.name"
+        img-class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+      />
 
-    <div class="flex flex-col gap-2 p-1">
-      <ProductSummary :name="product.name" :description="product.description" />
-
-      <div class="flex items-center gap-2 mt-1">
-        <span v-if="product.discountPrice" class="font-bold text-success text-base">
-          {{ formatPrice(product.discountPrice) }}
+      <!-- Discount Badge -->
+      <div v-if="product.discountPrice" class="absolute top-3 inset-s-3">
+        <span class="inline-flex items-center gap-1 rounded-lg bg-red-500 px-2 py-1 text-xs font-bold text-white shadow-sm">
+          {{ discountPercent(product.price, product.discountPrice) }}٪−
         </span>
-        <span
-          class="text-sm"
-          :class="product.discountPrice ? 'line-through text-muted' : 'font-bold text-default text-base'"
-        >
+      </div>
+
+      <!-- Category -->
+      <div class="absolute bottom-3 inset-e-3">
+        <span class="inline-flex items-center rounded-lg bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm px-2.5 py-1 text-xs font-medium text-default shadow-sm">
+          {{ categoryLabel(product.categoryId) }}
+        </span>
+      </div>
+    </NuxtLink>
+
+    <!-- Content -->
+    <div class="flex flex-col gap-3 p-4 flex-1">
+      <NuxtLink :to="`/${product.slug}`" class="block">
+        <h3 class="font-bold text-default text-base leading-snug line-clamp-1 group-hover:text-primary transition-colors">
+          {{ product.name }}
+        </h3>
+      </NuxtLink>
+
+      <p class="text-sm text-muted line-clamp-2 leading-relaxed flex-1">
+        {{ product.description }}
+      </p>
+
+      <!-- Price -->
+      <div class="flex items-baseline gap-2">
+        <span class="font-black text-lg text-default">
+          {{ formatPrice(product.discountPrice ?? product.price) }}
+        </span>
+        <span class="text-xs text-muted">تومان</span>
+        <span v-if="product.discountPrice" class="text-xs line-through text-muted me-auto">
           {{ formatPrice(product.price) }}
         </span>
       </div>
     </div>
 
-    <template #footer>
-      <div class="flex flex-wrap gap-2 justify-end">
-        <UButton variant="outline" color="neutral" :to="`/${product.slug}`" size="sm">
-          مشاهده
-        </UButton>
-        <UButton size="sm" icon="i-lucide-shopping-cart" @click="emit('addToCart', product.id)">
-          افزودن به سبد
-          <span v-if="cartQuantity" class="text-xs opacity-80 ms-1">({{ cartQuantity }})</span>
-        </UButton>
-      </div>
-    </template>
-  </UCard>
+    <!-- Footer -->
+    <div class="px-4 pb-4">
+      <UButton
+        block
+        size="md"
+        :variant="cartQuantity ? 'soft' : 'solid'"
+        icon="i-lucide-shopping-cart"
+        @click="emit('addToCart', product.id)"
+      >
+        {{ cartQuantity ? `${cartQuantity} عدد در سبد` : 'افزودن به سبد' }}
+      </UButton>
+    </div>
+  </div>
 </template>
