@@ -6,6 +6,26 @@ const props = defineProps<{
 }>()
 
 const cartStore = useCartStore()
+const route = useRoute()
+const router = useRouter()
+
+function parseCatFromQuery() {
+  const raw = route.query.cat
+  const v = Array.isArray(raw) ? raw[0] : raw
+  if (!v) return null
+  const n = Number(v)
+  return Number.isFinite(n) ? n : null
+}
+
+async function syncCatToQuery(nextCatId: number | null) {
+  const query = { ...route.query }
+  if (nextCatId == null) {
+    delete query.cat
+  } else {
+    query.cat = String(nextCatId)
+  }
+  await router.replace({ query })
+}
 
 function cartQuantityFor(productId: IProduct['id']) {
   return cartStore.cart.find((c) => c.productId === productId)?.quantity
@@ -52,7 +72,9 @@ const filteredProducts = computed(() => {
 })
 
 function setCategory(id: number | null, closeMobile = false) {
-  selectedCategoryId.value = id === selectedCategoryId.value ? null : id
+  const next = id === selectedCategoryId.value ? null : id
+  selectedCategoryId.value = next
+  void syncCatToQuery(next)
   if (closeMobile) mobileFilterOpen.value = false
 }
 
@@ -60,7 +82,16 @@ function clearFilters() {
   searchInput.value = ''
   searchQuery.value = ''
   selectedCategoryId.value = null
+  void syncCatToQuery(null)
 }
+
+watch(
+  () => route.query.cat,
+  () => {
+    selectedCategoryId.value = parseCatFromQuery()
+  },
+  { immediate: true },
+)
 </script>
 
 <template>

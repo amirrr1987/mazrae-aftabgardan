@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@iconify-json/lucide": "^1.2.123",
+    "@iconify/vue": "^5.0.1",
     "@nuxt/fonts": "0.14.0",
     "@nuxt/icon": "2.5.0",
     "@nuxt/image": "2.1.0",

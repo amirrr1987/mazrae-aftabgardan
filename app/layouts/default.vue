@@ -83,21 +83,31 @@ const userMenuItems = computed(() => [
           <USeparator />
 
           <div>
-            <p class="text-xs font-semibold text-muted uppercase tracking-wider mb-2">سایر</p>
+            <p class="text-xs font-semibold text-muted uppercase tracking-wider mb-2">اطلاعات</p>
             <div class="space-y-2">
               <NuxtLink
-                v-for="link in infoLinks"
-                :key="link.to"
-                :to="link.to"
+                to="/about"
                 class="block rounded-xl bg-elevated hover:bg-muted transition-colors px-3 py-2 text-sm text-default"
                 @click="closeMenu"
               >
-                {{ link.label }}
+                درباره ما
+              </NuxtLink>
+              <NuxtLink
+                to="/terms"
+                class="block rounded-xl bg-elevated hover:bg-muted transition-colors px-3 py-2 text-sm text-default"
+                @click="closeMenu"
+              >
+                قوانین و مقررات
+              </NuxtLink>
+              <NuxtLink
+                to="/contact"
+                class="block rounded-xl bg-elevated hover:bg-muted transition-colors px-3 py-2 text-sm text-default"
+                @click="closeMenu"
+              >
+                تماس با ما
               </NuxtLink>
             </div>
           </div>
-
-          <USeparator />
 
           <div v-if="authStore.isLoggedIn" class="space-y-2">
             <NuxtLink
@@ -164,6 +174,27 @@ const userMenuItems = computed(() => [
               class="text-sm px-3 py-2 rounded-xl text-muted hover:text-primary hover:bg-elevated transition-colors"
             >
               {{ link.label }}
+            </NuxtLink>
+
+            <NuxtLink
+              to="/about"
+              class="text-sm px-3 py-2 rounded-xl text-muted hover:text-primary hover:bg-elevated transition-colors"
+            >
+              درباره ما
+            </NuxtLink>
+
+            <NuxtLink
+              to="/terms"
+              class="text-sm px-3 py-2 rounded-xl text-muted hover:text-primary hover:bg-elevated transition-colors"
+            >
+              قوانین
+            </NuxtLink>
+
+            <NuxtLink
+              to="/contact"
+              class="text-sm px-3 py-2 rounded-xl text-muted hover:text-primary hover:bg-elevated transition-colors"
+            >
+              تماس با ما
             </NuxtLink>
           </nav>
         </div>
