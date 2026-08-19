@@ -18,9 +18,14 @@ const categories = [
   { id: 4, label: 'پاستیل', icon: 'i-lucide-heart' },
 ]
 
+const searchInput = ref('')
 const searchQuery = ref('')
 const selectedCategoryId = ref<number | null>(null)
 const mobileFilterOpen = ref(false)
+
+const updateSearch = useDebounceFn((val: string) => {
+  searchQuery.value = val
+}, 300)
 
 const categoryIds = computed(() => {
   const ids = new Set(props.products.map((p) => p.categoryId))
@@ -28,7 +33,7 @@ const categoryIds = computed(() => {
 })
 
 const hasActiveFilters = computed(
-  () => selectedCategoryId.value != null || searchQuery.value.trim().length > 0,
+  () => selectedCategoryId.value != null || searchInput.value.trim().length > 0,
 )
 
 const filteredProducts = computed(() => {
@@ -51,6 +56,7 @@ function setCategory(id: number | null) {
 }
 
 function clearFilters() {
+  searchInput.value = ''
   searchQuery.value = ''
   selectedCategoryId.value = null
 }
@@ -65,10 +71,11 @@ function clearFilters() {
       <div class="flex flex-col gap-1.5">
         <span class="text-xs font-semibold text-muted uppercase tracking-wider">جستجو</span>
         <UInput
-          v-model="searchQuery"
+          v-model="searchInput"
           placeholder="نام محصول…"
           icon="i-lucide-search"
           size="sm"
+          @update:model-value="updateSearch"
         />
       </div>
 
@@ -145,10 +152,11 @@ function clearFilters() {
         class="lg:hidden mb-5 p-4 rounded-2xl border border-default bg-elevated flex flex-col gap-4"
       >
         <UInput
-          v-model="searchQuery"
+          v-model="searchInput"
           placeholder="جستجو…"
           icon="i-lucide-search"
           size="sm"
+          @update:model-value="updateSearch"
         />
         <div class="flex flex-wrap gap-2">
           <UButton
@@ -181,13 +189,19 @@ function clearFilters() {
         v-if="filteredProducts.length"
         class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
       >
-        <ProductCard
-          v-for="product in filteredProducts"
+        <div
+          v-for="(product, i) in filteredProducts"
           :key="product.id"
-          :product="product"
-          :cart-quantity="cartQuantityFor(product.id)"
-          @add-to-cart="cartStore.addToCart"
-        />
+          v-motion
+          :initial="{ opacity: 0, y: 24 }"
+          :visible-once="{ opacity: 1, y: 0, transition: { duration: 400, delay: i * 60 } }"
+        >
+          <ProductCard
+            :product="product"
+            :cart-quantity="cartQuantityFor(product.id)"
+            @add-to-cart="cartStore.addToCart"
+          />
+        </div>
       </div>
 
       <div v-else class="py-20 text-center">

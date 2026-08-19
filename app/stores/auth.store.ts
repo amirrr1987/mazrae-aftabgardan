@@ -1,7 +1,12 @@
 import type { IUser } from '~/models/user.model'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<IUser | null>(null)
+  const user = useLocalStorage<IUser | null>('auth_user', null, {
+    serializer: {
+      read: (v) => (v ? JSON.parse(v) : null),
+      write: (v) => JSON.stringify(v),
+    },
+  })
   const isLoggedIn = computed(() => user.value !== null)
 
   function register(payload: { firstName: string; lastName: string; email: string; password: string }) {
