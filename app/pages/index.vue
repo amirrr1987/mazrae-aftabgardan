@@ -28,25 +28,6 @@
       <div class="absolute -bottom-32 -inset-s-32 size-80 rounded-full bg-secondary/5 blur-3xl" />
     </section>
 
-    <!-- Category Chips -->
-    <section class="border-b border-default bg-elevated">
-      <div class="max-w-7xl mx-auto px-4 py-5">
-        <div class="flex flex-wrap gap-2 justify-center">
-          <UButton
-            v-for="cat in categories"
-            :key="cat.id"
-            variant="soft"
-            :color="cat.color"
-            size="md"
-            :icon="cat.icon"
-            class="rounded-full"
-          >
-            {{ cat.label }}
-          </UButton>
-        </div>
-      </div>
-    </section>
-
     <!-- Products -->
     <section class="max-w-7xl mx-auto px-4 py-12">
       <div class="flex items-center gap-3 mb-8">
@@ -65,11 +46,4 @@ import { useProductStore } from '~/stores/product.store'
 
 useHead({ title: 'مزرعه آفتابگردان — قهوه، شکلات و تنقلات' })
 const productStore = useProductStore()
-
-const categories = [
-  { id: 1, label: 'قهوه و نوشیدنی', icon: 'i-lucide-coffee', color: 'primary' as const },
-  { id: 2, label: 'شکلات', icon: 'i-lucide-candy', color: 'secondary' as const },
-  { id: 3, label: 'آبنبات', icon: 'i-lucide-star', color: 'success' as const },
-  { id: 4, label: 'پاستیل', icon: 'i-lucide-heart', color: 'warning' as const },
-]
 </script>
